@@ -1,12 +1,12 @@
 [submodule "front"]
 	path = front
-	url = ./shark-front
+	url = https://github.com/tomo1227/shark-front
 [submodule "back"]
 	path = back
-	url = ./shark-back
+	url = https://github.com/tomo1227/shark-back
 [submodule "db"]
 	path = db
-	url = ./shark-db
+	url = https://github.com/tomo1227/shark-db
 [submodule "web"]
 	path = web
-	url = ./shark-web
+	url = https://github.com/tomo1227/shark-web
