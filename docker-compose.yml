@@ -11,3 +11,63 @@ services:
       - ./back:/go/src
     ports:
       - "3000:3000"
+
+  front:
+    container_name: front_shark
+    hostname: front_shark
+    build:
+      context: ./front
+      dockerfile: ./Dockerfile
+    # command: 'sh /shark/scripts/start.sh'
+    volumes:
+      - ./front/app:/shark
+      # - ./front/node_modules:/code
+    ports:
+      - "8080:8080"
+    tty: true
+    depends_on:
+      -  back
+    # networks:
+    #   - pathy_net
+
+  db:
+    image: mysql:8.0.31
+    container_name: db_shark
+    hostname: db_shark
+    build:
+      context: ./db
+      dockerfile: ./Dockerfile
+    # command: 'sh /shark/scripts/start.sh'
+    volumes:
+      - ./front/app:/shark
+      # - ./front/node_modules:/code
+    ports:
+      - "8080:8080"
+    tty: true
+    environment:
+    - MYSQL_DATABASE=sample_db
+    - MYSQL_ROOT_PASSWORD=root
+    command:
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_general_ci
+    ports:
+      - 3306:3306
+
+  web:
+    image: nginx:1.23.2
+    container_name: web_shark
+    #ホスト名を明示的に指定する
+    hostname: web_shark
+    volumes:
+      #設定ファイル
+      #[ホスト側の相対Path]:コンテナの絶対Path
+      - ./web/conf/:/etc/nginx/conf.d
+      #ログ
+      - ./web/log/nginx/:/var/log/nginx/
+      #staticファイル
+      - ./web/static:/static
+    tty: true
+    ports:
+      - "80:80" #ポート指定、ホスト:コンテナ
+    depends_on:
+      - back  #appに依存
